@@ -1,31 +1,42 @@
 #!/usr/bin/env node
-var co = require('co');
-var prompt = require('co-prompt');
-var program = require('commander');
-var nodeRSA = require('node-rsa');
-var publicKey = require('./keys/public_key');
+const fs = require('fs');
+const nodeRSA = require('node-rsa');
+const program = require('commander');
+const readline = require('readline');
 
 program
-.action(function() {
-  co(function *() {
-    var loop = true;
+.arguments('<file>')
+.action(function(file) {
+  // Use to read each lines of the file
+  const rl = readline.createInterface({
+    input: fs.createReadStream(file),
+    crlfDelay: Infinity
+  });
 
-    while (loop) {
-      var plaintext = yield prompt('\nEnter plain text: ');
+  var publicKey = "";
+  var lineCounter = 0;
+  rl.on('line', (line) => {
+    if (lineCounter > 0) {
+      publicKey += "\n";
+    }
+    publicKey += line;
+    lineCounter++;
+  }).on('close', () => {
+    // Use to prompt the user
+    const ask = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
 
-      const key = new nodeRSA(publicKey.key);
+    ask.question('Enter plain text: ', (plainText) => {
+      const key = new nodeRSA(publicKey);
       key.setOptions({encryptionScheme: 'pkcs1'});
 
-      // Encrypt the plaintext using RSA
-      const encryptedText = key.encrypt(plaintext, 'base64');
+      const encryptedText = key.encrypt(plainText, 'base64');
       console.log("Encrypted text: %s", encryptedText);
 
-      var shouldContinue = yield prompt('\nEnter y to repeat, any key to exit: ');
-      if (shouldContinue != 'Y' && shouldContinue != 'y') {
-        loop = false;
-        process.exit(0);
-      }
-    }
+      ask.close();
+    });
   });
 })
-.parse(process.argv);;
+.parse(process.argv);
