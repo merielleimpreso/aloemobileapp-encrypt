@@ -1,0 +1,34 @@
+{
+  "name": "aloemobileapp-encrypt",
+  "version": "1.0.0",
+  "description": "A command-line tool for encrypting text for ALOE Mobile.",
+  "main": "index.js",
+  "scripts": {
+    "test": "aloemobileapp-encrypt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/merielleimpreso/aloemobileapp-encrypt.git"
+  },
+  "keywords": [
+    "aloe",
+    "mobile",
+    "ecnrypt",
+    "rsa"
+  ],
+  "author": "meyeimpressive",
+  "license": "ISC",
+  "bin": {
+    "aloemobileapp-encrypt": "./index.js"
+  },
+  "bugs": {
+    "url": "https://github.com/merielleimpreso/aloemobileapp-encrypt/issues"
+  },
+  "homepage": "https://github.com/merielleimpreso/aloemobileapp-encrypt#readme",
+  "dependencies": {
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "commander": "^2.19.0",
+    "node-rsa": "^1.0.1"
+  }
+}
